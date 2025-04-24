@@ -86,8 +86,7 @@ export default function NoteDetailPage() {
 
   return (
     <div className="space-y-8 max-w-6xl mx-auto pb-8 pt-4">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-semibold">{note.title}</h1>
+      <div className="flex justify-end items-center">
         <div className="flex items-center space-x-3">
           <Button 
             onClick={toggleEditMode} 

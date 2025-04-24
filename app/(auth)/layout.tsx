@@ -14,14 +14,6 @@ export default function AuthLayout({
       <main className="flex-1 flex items-center justify-center">
         {children}
       </main>
-      
-      <footer className="border-t py-6">
-        <div className="container flex flex-col items-center justify-between gap-4 md:h-14 md:flex-row">
-          <p className="text-center text-sm leading-loose text-muted-foreground md:text-left">
-            © {new Date().getFullYear()} AI-Powered Notes App. All rights reserved.
-          </p>
-        </div>
-      </footer>
     </div>
   );
 } 

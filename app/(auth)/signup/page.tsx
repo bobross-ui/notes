@@ -1,60 +1,22 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useRouter } from 'next/navigation'; // Import useRouter
-import { createSupabaseBrowserClient } from '@/lib/supabase/client'; // Import Supabase client
+import { useRouter } from 'next/navigation';
+import { createSupabaseBrowserClient } from '@/lib/supabase/client';
+import Link from 'next/link';
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { UserPlus } from "lucide-react";
 
 export default function SignUpPage() {
-  const router = useRouter(); // Initialize router
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [message, setMessage] = useState<string | null>(null); // For success/info messages
   const supabase = createSupabaseBrowserClient();
 
-  const handleSignUp = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setLoading(true);
-    setError(null);
-    setMessage(null);
-    const formData = new FormData(event.currentTarget);
-    const email = formData.get('email') as string;
-    const password = formData.get('password') as string;
-
-    // Optional: Add password confirmation check here if you add the field
-
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        // Optional: Email redirect URL after confirmation
-        // emailRedirectTo: `${location.origin}/auth/callback`,
-      },
-    });
-
-    setLoading(false);
-    if (error) {
-      console.error('Sign up error:', error.message);
-      setError(error.message);
-    } else if (data.user && data.user.identities?.length === 0) {
-        // This can happen in Supabase if signups are disabled, the user might exist but is not confirmed.
-        setError("Sign up failed. The user might already exist or signups could be disabled.");
-    } else if (data.session) {
-      // User signed up and logged in immediately (e.g., if email confirmation is disabled)
-      setMessage('Sign up successful! Redirecting...');
-      router.push('/'); // Redirect to dashboard
-      router.refresh();
-    } else if (data.user) {
-      // User signed up but needs email confirmation
-      setMessage('Sign up successful! Please check your email to confirm your account.');
-      // Optionally redirect to a page telling them to check email, or stay here.
-      // router.push('/check-email');
-    } else {
-      // Unexpected case
-       setError("An unexpected error occurred during sign up.");
-    }
-  };
-
-  // Google Sign Up uses the same logic as Google Login
+  // Google Sign Up 
   const handleGoogleSignUp = async () => {
     setLoading(true);
     setError(null);
@@ -76,44 +38,52 @@ export default function SignUpPage() {
   };
 
   return (
-    <div style={{ maxWidth: '400px', margin: '50px auto', padding: '20px', border: '1px solid #ccc', borderRadius: '8px' }}>
-      <h2>Sign Up</h2>
-      {error && <p style={{ color: 'red' }}>Error: {error}</p>}
-      {message && <p style={{ color: 'green' }}>{message}</p>} {/* Display success/info message */}
-      <form onSubmit={handleSignUp}>
-        <div style={{ marginBottom: '15px' }}>
-          <label htmlFor="email" style={{ display: 'block', marginBottom: '5px' }}>Email:</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            required
-            disabled={loading}
-            style={{ width: '100%', padding: '8px', boxSizing: 'border-box' }}
-          />
-        </div>
-        <div style={{ marginBottom: '15px' }}>
-          <label htmlFor="password" style={{ display: 'block', marginBottom: '5px' }}>Password:</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            required
-            minLength={6}
-            disabled={loading}
-            style={{ width: '100%', padding: '8px', boxSizing: 'border-box' }}
-          />
-        </div>
-        <button type="submit" disabled={loading} style={{ width: '100%', padding: '10px', marginBottom: '10px', cursor: loading ? 'wait' : 'pointer' }}>
-          {loading ? 'Signing up...' : 'Sign Up with Email/Password'}
-        </button>
-      </form>
-      <button onClick={handleGoogleSignUp} disabled={loading} style={{ width: '100%', padding: '10px', cursor: loading ? 'wait' : 'pointer', backgroundColor: '#eee' }}>
-        {loading ? 'Redirecting...' : 'Sign up with Google'}
-      </button>
-      <p style={{ textAlign: 'center', marginTop: '15px' }}>
-        Already have an account? <a href="/login">Login</a>
-      </p>
+    <div className="w-full max-w-md mx-auto">
+      <Card>
+        <CardHeader className="space-y-1">
+          <CardTitle className="text-2xl font-bold">Sign Up</CardTitle>
+          <CardDescription>
+            Create an account to start taking notes
+          </CardDescription>
+        </CardHeader>
+        
+        {error && (
+          <CardContent className="pt-0">
+            <Alert variant="destructive">
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          </CardContent>
+        )}
+        
+        <CardContent className="space-y-4">
+          <Button 
+            onClick={handleGoogleSignUp} 
+            disabled={loading} 
+            className="w-full"
+          >
+            {loading ? (
+              <span className="flex items-center gap-2">
+                <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                Redirecting...
+              </span>
+            ) : (
+              <span className="flex items-center gap-2">
+                <UserPlus className="h-4 w-4" />
+                Sign up with Google
+              </span>
+            )}
+          </Button>
+        </CardContent>
+        
+        <CardFooter className="flex flex-col">
+          <div className="text-center text-sm">
+            Already have an account?{" "}
+            <Link href="/login" className="font-medium text-primary hover:underline">
+              Login
+            </Link>
+          </div>
+        </CardFooter>
+      </Card>
     </div>
   );
 } 

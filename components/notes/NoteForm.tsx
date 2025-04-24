@@ -94,31 +94,36 @@ const NoteForm: React.FC<NoteFormProps> = ({
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="title" className="text-base flex items-center gap-2">
-              <Type className="h-4 w-4 text-primary" />
-              Title
-            </Label>
-            <div className="relative">
-              <Input
-                id="title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                required
-                disabled={isSubmitting}
-                placeholder="Enter a descriptive title..."
-                className="pl-3 pr-3 py-2 h-12 text-base"
-              />
-              {title && <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-xs text-muted-foreground">
+            <div className="flex justify-between items-center">
+              <Label htmlFor="title" className="text-base flex items-center gap-2">
+                <Type className="h-4 w-4 text-primary" />
+                Title
+              </Label>
+              {title && <div className="text-xs text-muted-foreground">
                 {title.length} characters
               </div>}
             </div>
+            <Input
+              id="title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              required
+              disabled={isSubmitting}
+              placeholder="Enter a descriptive title..."
+              className="pl-3 pr-3 py-2 h-12 text-base"
+            />
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="content" className="text-base flex items-center gap-2">
-              <AlignLeft className="h-4 w-4 text-primary" />
-              Content
-            </Label>
+            <div className="flex justify-between items-center">
+              <Label htmlFor="content" className="text-base flex items-center gap-2">
+                <AlignLeft className="h-4 w-4 text-primary" />
+                Content
+              </Label>
+              {content && <div className="text-xs text-muted-foreground">
+                {charCount} characters
+              </div>}
+            </div>
             
             <Card className="border">
               <CardContent className="p-0">
@@ -137,9 +142,6 @@ const NoteForm: React.FC<NoteFormProps> = ({
                       }}
                     />
                   </ScrollArea>
-                  {content && <div className="absolute right-3 bottom-3 text-xs text-muted-foreground bg-background/80 px-2 py-1 rounded-md">
-                    {charCount} characters
-                  </div>}
                 </div>
               </CardContent>
             </Card>

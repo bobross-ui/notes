@@ -159,6 +159,8 @@ const MobileNav = () => {
             New Note
           </Button>
           
+          <LogoutButton className="w-full" />
+          
           <div className="mt-2">
             <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-3">My Notes</h3>
             <div className="space-y-1 max-h-[50vh] overflow-y-auto pr-2">
@@ -193,10 +195,6 @@ const MobileNav = () => {
               )}
             </div>
           </div>
-        </div>
-        
-        <div className="absolute bottom-4 left-4 right-4">
-          <LogoutButton className="w-full" />
         </div>
       </SheetContent>
     </Sheet>

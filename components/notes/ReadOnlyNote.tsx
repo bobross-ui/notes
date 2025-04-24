@@ -92,7 +92,7 @@ const ReadOnlyNote: React.FC<ReadOnlyNoteProps> = ({ note }) => {
           
           <div className="prose max-w-none">
             {note.content ? (
-              <div className="whitespace-pre-wrap text-base leading-relaxed break-all break-words">{note.content}</div>
+              <div className="whitespace-pre-wrap text-base leading-relaxed break-words">{note.content}</div>
             ) : (
               <p className="text-muted-foreground italic">No content</p>
             )}

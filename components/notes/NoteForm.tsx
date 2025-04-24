@@ -150,7 +150,7 @@ const NoteForm: React.FC<NoteFormProps> = ({
                   <ScrollArea className="h-[250px]">
                     <div 
                       ref={contentEditableRef}
-                      className="min-h-[250px] p-4 outline-none w-full focus:ring-0 focus-visible:ring-0"
+                      className="min-h-[250px] p-4 pt-0 outline-none w-full focus:ring-0 focus-visible:ring-0"
                       contentEditable={!isFormDisabled}
                       suppressContentEditableWarning
                       onInput={handleContentChange}

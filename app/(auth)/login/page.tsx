@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
-import Link from 'next/link';
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -16,7 +15,7 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const supabase = createSupabaseBrowserClient();
 
-  const handleGoogleLogin = async () => {
+  const handleGoogleAuth = async () => {
     setLoading(true);
     setError(null);
     const { error } = await supabase.auth.signInWithOAuth({
@@ -27,7 +26,7 @@ export default function LoginPage() {
     });
 
     if (error) {
-      console.error('Google login initiation error:', error.message);
+      console.error('Google authentication error:', error.message);
       setError(error.message);
       setLoading(false);
     }
@@ -37,9 +36,9 @@ export default function LoginPage() {
     <div className="w-full max-w-md mx-auto">
       <Card>
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold">Login</CardTitle>
+          <CardTitle className="text-2xl font-bold">Welcome</CardTitle>
           <CardDescription>
-            Sign in to access your notes
+            Sign in with your Google account to access your notes
           </CardDescription>
         </CardHeader>
         
@@ -53,7 +52,7 @@ export default function LoginPage() {
         
         <CardContent className="space-y-4">
           <Button 
-            onClick={handleGoogleLogin} 
+            onClick={handleGoogleAuth} 
             disabled={loading} 
             className="w-full"
           >
@@ -65,20 +64,11 @@ export default function LoginPage() {
             ) : (
               <span className="flex items-center gap-2">
                 <LogIn className="h-4 w-4" />
-                Sign in with Google
+                Continue with Google
               </span>
             )}
           </Button>
         </CardContent>
-        
-        <CardFooter className="flex flex-col">
-          <div className="text-center text-sm">
-            Don't have an account?{" "}
-            <Link href="/signup" className="font-medium text-primary hover:underline">
-              Sign Up
-            </Link>
-          </div>
-        </CardFooter>
       </Card>
     </div>
   );

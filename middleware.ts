@@ -43,7 +43,7 @@ export async function middleware(request: NextRequest) {
 
   // Define protected and auth routes
   const protectedPaths = ['/', '/notes'];
-  const authPaths = ['/login', '/signup'];
+  const authPaths = ['/login'];
   const pathname = request.nextUrl.pathname;
 
   const isProtectedPath = protectedPaths.some(path =>

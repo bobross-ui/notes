@@ -122,10 +122,10 @@ const Sidebar = () => {
   const filteredNotes = notes.filter(note => !pendingDeletionIds.includes(note.id));
 
   return (
-    <div className="h-screen flex-col border-r bg-background px-2 md:px-4 py-4 hidden md:flex w-[280px] sticky top-0">
-      <div className="flex flex-col justify-between h-full">
-        <div className="space-y-6">
-          <div className="px-4 py-2">
+    <div className="flex flex-col border-r bg-background px-2 md:px-4 py-4 hidden md:flex w-[280px] h-full">
+      <div className="flex flex-col justify-between flex-1">
+        <div className="space-y-6 flex-1 flex flex-col min-h-0">
+          <div className="px-4 py-2 flex-shrink-0">
             <Button 
               className="w-full"
               onClick={() => router.push('/')}
@@ -135,13 +135,13 @@ const Sidebar = () => {
             </Button>
           </div>
           
-          <div>            
+          <div className="flex-shrink-0">            
             <h2 className="px-6 text-sm font-medium text-muted-foreground uppercase tracking-wider">My Notes</h2>            
           </div>
           
           {/* Notes List Section */}
-          <div className="px-2">
-            <ScrollArea className="h-[calc(100vh-200px)]">
+          <div className="px-2 flex-1 min-h-0">
+            <ScrollArea className="h-full">
               <div className="space-y-1">
                 {isLoading ? (
                   <p className="text-sm text-muted-foreground px-4">Loading notes...</p>
@@ -174,7 +174,7 @@ const Sidebar = () => {
           </div>
         </div>
         
-        <div className="px-6 py-4">
+        <div className="px-6 py-4 flex-shrink-0">
           <div className="text-xs text-muted-foreground">
             © {new Date().getFullYear()} Notes App
           </div>

@@ -32,6 +32,7 @@ const NoteForm: React.FC<NoteFormProps> = ({
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [charCount, setCharCount] = useState(0);
+  const [isSubmittingLocal, setIsSubmittingLocal] = useState(false);
   const contentEditableRef = useRef<HTMLDivElement>(null);
 
   // Use useEffect to set initial state when editing an existing note
@@ -61,33 +62,51 @@ const NoteForm: React.FC<NoteFormProps> = ({
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     
-    // Only attempt to get a summary if there's sufficient content
-    let summary = undefined;
-    if (content.length > 10) {
-      try {
-        const summaryResult = await fetchSummary(content);
-        if (summaryResult.summary) {
-          summary = summaryResult.summary;
-        }
-      } catch (error) {
-        console.error("Failed to generate summary:", error);
-        // Continue with submission even if summary fails
-      }
+    // Prevent multiple submissions
+    if (isSubmitting || isSubmittingLocal) {
+      return;
     }
     
-    // Submit the form with the title, content, and automatically generated summary
-    await onSubmit({ title, content, summary });
+    // Set local submission state to true
+    setIsSubmittingLocal(true);
     
-    // Optionally clear form after submit, depending on usage (e.g., only for create)
-    if (!note) {
-      setTitle('');
-      setContent('');
-      setCharCount(0);
-      if (contentEditableRef.current) {
-        contentEditableRef.current.textContent = '';
+    try {
+      // Only attempt to get a summary if there's sufficient content
+      let summary = undefined;
+      if (content.length > 10) {
+        try {
+          const summaryResult = await fetchSummary(content);
+          if (summaryResult.summary) {
+            summary = summaryResult.summary;
+          }
+        } catch (error) {
+          console.error("Failed to generate summary:", error);
+          // Continue with submission even if summary fails
+        }
       }
+      
+      // Submit the form with the title, content, and automatically generated summary
+      await onSubmit({ title, content, summary });
+      
+      // Optionally clear form after submit, depending on usage (e.g., only for create)
+      if (!note) {
+        setTitle('');
+        setContent('');
+        setCharCount(0);
+        if (contentEditableRef.current) {
+          contentEditableRef.current.textContent = '';
+        }
+      }
+    } catch (error) {
+      console.error("Form submission error:", error);
+    } finally {
+      // Reset local submission state
+      setIsSubmittingLocal(false);
     }
   };
+
+  // Determine if the form should be disabled
+  const isFormDisabled = isSubmitting || isSubmittingLocal;
 
   return (
     <div className="w-full">
@@ -108,7 +127,7 @@ const NoteForm: React.FC<NoteFormProps> = ({
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               required
-              disabled={isSubmitting}
+              disabled={isFormDisabled}
               placeholder="Enter a descriptive title..."
               className="pl-3 pr-3 py-2 h-12 text-base"
             />
@@ -132,7 +151,7 @@ const NoteForm: React.FC<NoteFormProps> = ({
                     <div 
                       ref={contentEditableRef}
                       className="min-h-[250px] p-4 outline-none w-full focus:ring-0 focus-visible:ring-0"
-                      contentEditable={!isSubmitting}
+                      contentEditable={!isFormDisabled}
                       suppressContentEditableWarning
                       onInput={handleContentChange}
                       style={{
@@ -151,11 +170,11 @@ const NoteForm: React.FC<NoteFormProps> = ({
         <div className="flex justify-end">
           <Button 
             type="submit" 
-            disabled={isSubmitting || !title || !content} 
+            disabled={isFormDisabled || !title || !content} 
             className="w-full md:w-auto px-8"
             size="lg"
           >
-            {isSubmitting ? (
+            {isFormDisabled ? (
               <span className="flex items-center gap-2">
                 <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
                 Saving...

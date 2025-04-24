@@ -152,17 +152,17 @@ const Sidebar = () => {
                     <div key={note.id} className="flex items-center group pr-1">
                       <Button
                         variant={pathname === `/notes/${note.id}` ? "secondary" : "ghost"}
-                        className="flex-1 justify-start overflow-hidden"
+                        className="flex-1 justify-start overflow-hidden mr-1 max-w-[85%]"
                         onClick={() => router.push(`/notes/${note.id}`)}
                       >
                         <StickyNote className="mr-2 h-4 w-4 flex-shrink-0" />
-                        <span className="truncate">{note.title || "Untitled Note"}</span>
+                        <span className="truncate max-w-[140px]">{note.title || "Untitled Note"}</span>
                       </Button>
                       <Button 
                         variant="ghost" 
                         size="sm" 
                         onClick={(e) => handleDeleteNote(note.id, e)}
-                        className="h-7 w-7 p-0 flex-shrink-0 text-muted-foreground hover:text-destructive"
+                        className="h-7 w-7 p-0 min-w-[28px] flex-shrink-0 text-muted-foreground hover:text-destructive opacity-80 group-hover:opacity-100"
                       >
                         <Trash2 className="h-3.5 w-3.5" />
                       </Button>
